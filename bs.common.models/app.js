@@ -1,5 +1,5 @@
 (function() {
-  var app = angular.module('bs.models', ['ngResource']);
+  var app = angular.module('bs.common.models', ['ngResource']);
 
   app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');

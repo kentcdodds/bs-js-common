@@ -1,4 +1,4 @@
-angular.module('bs.models').factory('User', function($resource, $http, $q, _, UtilFunctions, $window) {
+angular.module('bs.common.models').factory('User', function($resource, $http, $q, _, UtilFunctions, $window) {
   var User = $resource('/api/v1/rest/users/:id', { id: '@_id' }, {
     dicsoverUsers: {
       method: 'GET',

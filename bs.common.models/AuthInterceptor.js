@@ -1,4 +1,4 @@
-angular.module('bs.models').factory('AuthInterceptor', function ($rootScope, $q, $window) {
+angular.module('bs.common.models').factory('AuthInterceptor', function ($rootScope, $q, $window) {
   return {
     request: function (config) {
       config.headers = config.headers || {};

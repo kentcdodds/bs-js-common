@@ -1,4 +1,4 @@
-angular.module('bs.models').factory('Post', function($resource, Cacher) {
+angular.module('bs.common.models').factory('Post', function($resource, Cacher) {
   var Post = $resource('/api/v1/rest/posts/:id', { id: '@_id' });
   Post.prototype.getAuthor = function() {
     return Cacher.userCache.get(this.author);

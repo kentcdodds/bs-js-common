@@ -1,4 +1,4 @@
-angular.module('bs.models').factory('Stream', function($resource, _, Cacher) {
+angular.module('bs.common.models').factory('Stream', function($resource, _, Cacher) {
   var Stream = $resource('/api/v1/rest/streams/:id', { id: '@_id' }, {
     save: {
       method: 'POST',

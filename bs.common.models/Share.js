@@ -1,4 +1,4 @@
-angular.module('bs.models').factory('Share', function($resource, Cacher) {
+angular.module('bs.common.models').factory('Share', function($resource, Cacher) {
   var Share = $resource('/api/v1/rest/shares/:id', { id: '@_id' });
   Share.prototype.getAuthor = function() {
     return Cacher.userCache.get(this.author);

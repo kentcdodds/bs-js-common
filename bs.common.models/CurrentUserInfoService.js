@@ -1,4 +1,4 @@
-angular.module('bs.models').factory('CurrentUserInfoService', function($rootScope, $q, $http, _, User, Stream, Bucket) {
+angular.module('bs.common.models').factory('CurrentUserInfoService', function($rootScope, $q, $http, _, User, Stream, Bucket) {
   var things = {
     user: {
       val: null,
