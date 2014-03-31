@@ -1,5 +1,5 @@
-angular.module('bs.common.models').factory('Share', function($resource, Cacher) {
-  var Share = $resource('/api/v1/rest/shares/:id', { id: '@_id' });
+angular.module('bs.common.models').factory('Share', function($resource, BASE_URL, Cacher) {
+  var Share = $resource(BASE_URL + '/api/v1/rest/shares/:id', { id: '@_id' });
   Share.prototype.getAuthor = function() {
     return Cacher.userCache.get(this.author);
   };

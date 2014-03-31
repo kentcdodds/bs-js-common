@@ -1,15 +1,15 @@
-angular.module('bs.common.models').factory('User', function($resource, $http, $q, _, UtilFunctions, $window) {
-  var User = $resource('/api/v1/rest/users/:id', { id: '@_id' }, {
+angular.module('bs.common.models').factory('User', function($resource, $http, $q, BASE_URL, _, UtilFunctions, $window) {
+  var User = $resource(BASE_URL + '/api/v1/rest/users/:id', { id: '@_id' }, {
     dicsoverUsers: {
       method: 'GET',
-      url: '/api/v1/rest/users/discover',
+      url: BASE_URL + '/api/v1/rest/users/discover',
       isArray: true,
       params: {
         username: 'me'
       }
     }
   });
-  var authPrefix = '/api/v1/auth';
+  var authPrefix = BASE_URL + '/api/v1/auth/';
 
   User.register = function(email, password) {
     return loginOrRegister('register', email, password);
@@ -22,7 +22,7 @@ angular.module('bs.common.models').factory('User', function($resource, $http, $q
   function loginOrRegister(type, username, password) {
     return $http({
       method: 'POST',
-      url: authPrefix + '/' + type,
+      url: authPrefix + type,
       data: {
         email: username,
         password: password
@@ -115,7 +115,7 @@ angular.module('bs.common.models').factory('User', function($resource, $http, $q
   };
 
   User.prototype.disconnectFrom = function(provider) {
-    return $http.get('/api/v1/auth/disconnect/' + provider);
+    return $http.get(authPrefix + 'disconnect/' + provider);
   };
 
   function getRuleIndex(user, provider, type, rule) {
