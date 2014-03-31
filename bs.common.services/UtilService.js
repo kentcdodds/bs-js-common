@@ -1,6 +1,6 @@
-angular.module('bs.common.services').factory('UtilService', function(_, Cacher, $http, $q, BASE_URL, Post, Share, Comment, User, Stream, Bucket) {
-  var utilPrefix = BASE_URL + '/api/v1/util/';
-  var authPrefix = BASE_URL + '/api/v1/auth/';
+angular.module('bs.common.services').factory('UtilService', function(_, Cacher, $http, $q, BaseUrl, Post, Share, Comment, User, Stream, Bucket) {
+  var utilPrefix = BaseUrl + '/api/v1/util/';
+  var authPrefix = BaseUrl + '/api/v1/auth/';
   //noinspection UnnecessaryLocalVariableJS
   var util = {
     validateModel: function(model, params) {

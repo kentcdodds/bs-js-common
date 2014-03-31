@@ -6,7 +6,7 @@
     baseUrl = window.BS.BASE_URL;
   }
 
-  app.constant('BASE_URL', baseUrl);
+  app.constant('BaseUrl', baseUrl);
 
   app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('AuthInterceptor');

@@ -1,15 +1,15 @@
-angular.module('bs.common.models').factory('User', function($resource, $http, $q, BASE_URL, _, UtilFunctions, $window) {
-  var User = $resource(BASE_URL + '/api/v1/rest/users/:id', { id: '@_id' }, {
+angular.module('bs.common.models').factory('User', function($resource, $http, $q, BaseUrl, _, UtilFunctions, $window) {
+  var User = $resource(BaseUrl + '/api/v1/rest/users/:id', { id: '@_id' }, {
     dicsoverUsers: {
       method: 'GET',
-      url: BASE_URL + '/api/v1/rest/users/discover',
+      url: BaseUrl + '/api/v1/rest/users/discover',
       isArray: true,
       params: {
         username: 'me'
       }
     }
   });
-  var authPrefix = BASE_URL + '/api/v1/auth/';
+  var authPrefix = BaseUrl + '/api/v1/auth/';
 
   User.register = function(email, password) {
     return loginOrRegister('register', email, password);
