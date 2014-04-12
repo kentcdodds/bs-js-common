@@ -8,7 +8,7 @@
  *  - post.removed.error
  *  - share.new
  */
-angular.module('bs.common.directives').directive('bsPost', function(CurrentUserInfoService, _, $q, Cacher, User, Comment, UtilFunctions) {
+angular.module('bs.common.directives').directive('bsPost', function(CurrentUserInfoService, _, $q, Cacher, User, Comment, UtilFunctions, $sce) {
   return {
     restrict: 'A',
     templateUrl: 'templates/bsPost.html',
@@ -24,6 +24,14 @@ angular.module('bs.common.directives').directive('bsPost', function(CurrentUserI
       scope.currentUser = CurrentUserInfoService.getUser();
       scope.$on(CurrentUserInfoService.events.user, function(event, user) {
         scope.currentUser = user;
+        $q.all(UtilFunctions.getResourcePromises(user)).then(function() {
+          if (scope.author && scope.author._id === user._id) {
+            scope.author = user;
+          }
+          if (scope.shareAuthor && scope.shareAuthor._id === user._id) {
+            scope.shareAuthor = user;
+          }
+        })
       });
       var initialPromises = UtilFunctions.getResourcePromises([scope.post, scope.share, scope.currentUser]);
       $q.all(initialPromises).then(initializeStep1);
@@ -44,11 +52,12 @@ angular.module('bs.common.directives').directive('bsPost', function(CurrentUserI
           }
           scope.author = new User({ username: 'unknown_user', name: { first: 'Unknown', last: 'User' } });
         }
-        scope.mainContent = scope.post.content.textString;
         if (scope.isShare) {
           scope.shareAuthor = scope.share.getAuthor();
           scope.shareBucketList = scope.share.getBuckets();
-          scope.mainContent = scope.share.content.textString;
+          scope.mainContent = $sce.trustAsHtml(scope.share.getHtml());
+        } else {
+          scope.mainContent = $sce.trustAsHtml(scope.post.getHtml());
         }
         var step1Promises = UtilFunctions.getResourcePromises([scope.author, scope.comments, scope.postBucketList, scope.shareAuthor, scope.shareBucketList]);
         $q.all(step1Promises).then(initializeStep2);
@@ -65,20 +74,20 @@ angular.module('bs.common.directives').directive('bsPost', function(CurrentUserI
       }
 
       scope.edit = function() {
-        scope.newContent = scope.mainContent;
+        scope.newContent = scope.post.content.textString;
+        if (scope.isShare) {
+          scope.newContent = scope.share.content.textString;
+        }
         scope.editing = true;
       };
 
       scope.updatePostContent = function(newContent) {
-        if (scope.isShare) {
-          scope.share.content.textString = newContent;
-          scope.share.$save();
-        } else {
-          scope.post.content.textString = newContent;
-          scope.post.$save();
-        }
-        scope.mainContent = newContent;
-        scope.editing = false;
+        var thing = scope.isShare ? 'share' : 'post';
+        scope[thing].content.textString = newContent;
+        scope[thing].$save(function() {
+          scope.mainContent = $sce.trustAsHtml(scope[thing].getHtml());
+          scope.editing = false;
+        });
       };
 
       scope.deleteComment = function(comment) {
@@ -123,7 +132,7 @@ angular.module('bs.common.directives').directive('bsPost', function(CurrentUserI
           modified: new Date(),
           owningPost: scope.post._id
         });
-        comment.$save(function(){
+        comment.$save(function() {
           Cacher.commentCache.putById(comment);
         }, function error() {
           scope.deleteComment(comment);
